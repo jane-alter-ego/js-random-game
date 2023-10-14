@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const draw = () => {
     drawRadialGradient();
+    drawIndicator();
 }
 
 const drawRadialGradient = () => {
@@ -27,4 +28,17 @@ const drawRadialGradient = () => {
     gradient.addColorStop(1, 'magenta');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+const degsToRads = (degs) => {
+    return degs * Math.PI / 180;
+}
+
+const drawIndicator = () => {
+    const ctx = canvas.getContext("2d");
+    ctx.strokeStyle = "pink";
+    ctx.lineWidth = 30;
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height, canvas.height / 4, degsToRads(225), degsToRads(315));
+    ctx.stroke();
 }
