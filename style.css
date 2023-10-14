@@ -20,7 +20,7 @@ main {
     background-color: white;
 }
 
-footer {
+header, footer {
     width: 1400px;
     background-color: black;
     padding: 5px 20px;
@@ -37,7 +37,7 @@ a {
     cursor: pointer;
 }
 
-ul {
+header p, ul {
     list-style-type: none;
     display: flex;
     justify-content: space-between;
