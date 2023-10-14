@@ -22,6 +22,9 @@ const COOKING_STATE = {
     DONE: 2
 }
 
+let winStatus;
+let winRecord = [];
+
 document.addEventListener("DOMContentLoaded", () => {
     canvas = document.getElementById("canvas");
     const footer = document.getElementById("footer");
@@ -79,6 +82,16 @@ const draw = () => {
                 break;
             case COOKING_STATE.COOKING:
                 state = COOKING_STATE.DONE;
+                const calculatedHandPosition = 270 + indicatorHandPosition;
+                if (calculatedHandPosition >= perfectArc.start && calculatedHandPosition <= perfectArc.end) {
+                    winStatus = "PERFECT";
+                } else if (calculatedHandPosition >= goodArc.start && calculatedHandPosition <= goodArc.end) {
+                    winStatus = "GOOD";
+                } else {
+                    winStatus = "BAD";
+                }
+                winRecord.push(winStatus);
+
                 break;
             case COOKING_STATE.DONE:
                 state = COOKING_STATE.IDLE;
@@ -86,6 +99,20 @@ const draw = () => {
                 perfectDegs(10);
                 break;
         }
+    }
+
+    switch (state) {
+        case COOKING_STATE.IDLE:
+                
+                break;
+            case COOKING_STATE.COOKING:
+                
+                
+
+                break;
+            case COOKING_STATE.DONE:
+                drawWinStatus();
+                break;
     }
 
     window.requestAnimationFrame(draw);
@@ -201,4 +228,13 @@ const isButtonClicked = () => {
         };
         return false;
     }
+}
+
+const drawWinStatus = () => {
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "black";
+    ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 - 150, 200, 100);
+    ctx.fillStyle = "white";
+    ctx.font = "60px Arial";
+    ctx.fillText(winStatus, canvas.width / 2 - 50, canvas.height / 2 - 80, 100);
 }
