@@ -8,6 +8,7 @@ let perfectArc = {
     start: 0,
     end: 0
 }
+let indicatorHandPosition = -45;
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const draw = () => {
     drawRadialGradient();
     drawIndicator();
+    drawIndicatorHand();
     
     window.requestAnimationFrame(draw);
 }
@@ -81,4 +83,19 @@ const perfectDegs = (degs) => {
     const end = start + degs;
     perfectArc.start = start;
     perfectArc.end = end;
+}
+
+const drawIndicatorHand = () => {
+    const ctx = canvas.getContext('2d');
+    ctx.translate(canvas.width / 2, canvas.height);
+    ctx.rotate(degsToRads(indicatorHandPosition));
+    ctx.translate(-canvas.width / 2, -canvas.height);
+
+    ctx.strokeStyle = "rgb(255, 255, 255, 0.8)";
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, canvas.height - 200);
+    ctx.lineTo(canvas.width / 2, canvas.height - canvas.height / 4 - 50);
+    ctx.stroke();
+    ctx.resetTransform();
 }
