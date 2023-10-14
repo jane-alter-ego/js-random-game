@@ -25,6 +25,8 @@ const COOKING_STATE = {
 let winStatus;
 let winRecord = [];
 
+let recordHistory = [];
+
 document.addEventListener("DOMContentLoaded", () => {
     canvas = document.getElementById("canvas");
     const footer = document.getElementById("footer");
@@ -36,6 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.width = header.getBoundingClientRect().width;
         canvas.height = window.innerHeight - header.getBoundingClientRect().height - footer.getBoundingClientRect().height;
     })
+
+    const recordHistoryString = window.localStorage.getItem('recordHistory');
+    if (recordHistoryString) {
+        recordHistory = JSON.parse(recordHistoryString);
+    }
 
     canvas.addEventListener("click", (e) => {
         clickCoords.x = e.clientX;
@@ -98,9 +105,37 @@ const draw = () => {
                 state = COOKING_STATE.IDLE;
 
                 if (winRecord.length === 10) {
+                    const result = winRecord.reduce((acc, current, index) => {
+                        if (current === 'PERFECT') {
+                            return acc + 2;
+                        } else if (current === 'GOOD') {
+                            return acc + 1;
+                        } else {
+                            return acc;
+                        }
+                     }, 0)
+
+                     if (recordHistory && recordHistory.length < 10) {
+                        recordHistory.push({
+                            score: result,
+                            record: winRecord,
+                            date: Date.now()
+                        })
+                     } else {
+                        const minScore = Math.min(...recordHistory.map(record => record.score));
+                        const minScoreIndex = recordHistory.findIndex((record) => record.score === minScore);
+                        recordHistory[minScoreIndex] = {
+                            score: result,
+                            record: winRecord,
+                            date: Date.now()
+                        };         
+                    }
+
+                    window.localStorage.setItem('recordHistory', JSON.stringify(recordHistory));
+
                     winRecord = [];
                 }
-                
+
                 goodDegs(30);
                 perfectDegs(10);
                 break;
