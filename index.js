@@ -11,6 +11,11 @@ let perfectArc = {
 let indicatorHandPosition = -45;
 let indicatorHandDirection = "up";
 
+let clickCoords = {
+    x: 0,
+    y: 0
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     canvas = document.getElementById("canvas");
     const footer = document.getElementById("footer");
@@ -21,6 +26,11 @@ document.addEventListener("DOMContentLoaded", () => {
     addEventListener("resize", () => {
         canvas.width = header.getBoundingClientRect().width;
         canvas.height = window.innerHeight - header.getBoundingClientRect().height - footer.getBoundingClientRect().height;
+    })
+
+    canvas.addEventListener("click", (e) => {
+        clickCoords.x = e.clientX;
+        clickCoords.y = e.clientY;
     })
 
     setInterval(() => {
@@ -49,6 +59,10 @@ const draw = () => {
     drawIndicatorHand();
     drawCookButton();
     
+    if (isButtonClicked()) {
+        console.log("clicked");
+    }
+
     window.requestAnimationFrame(draw);
 }
 
@@ -136,4 +150,21 @@ const drawCookButton = () => {
     ctx.lineTo(canvas.width / 2 + 20, canvas.height - 100);
     ctx.closePath();
     ctx.fill();
+}
+
+const isButtonClicked = () => {
+    const distance = Math.sqrt(Math.pow(clickCoords.x - canvas.width / 2, 2) + Math.pow(clickCoords.y - canvas.height + 100, 2));
+    if (distance <= 50) {
+        clickCoords = {
+            x: 0,
+            y: 0
+        };
+        return true;
+    } else {
+        clickCoords = {
+            x: 0,
+            y: 0
+        };
+        return false;
+    }
 }
