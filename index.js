@@ -1,5 +1,14 @@
 let canvas;
 let raf;
+let goodArc = {
+    start: 0,
+    end: 0
+}
+let perfectArc = {
+    start: 0,
+    end: 0
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     canvas = document.getElementById("canvas");
@@ -13,12 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.height = window.innerHeight - header.getBoundingClientRect().height - footer.getBoundingClientRect().height;
     })
 
+    goodDegs(30);
+    perfectDegs(10);
+
     window.requestAnimationFrame(draw);
 })
 
 const draw = () => {
     drawRadialGradient();
     drawIndicator();
+    
+    window.requestAnimationFrame(draw);
 }
 
 const drawRadialGradient = () => {
@@ -41,4 +55,30 @@ const drawIndicator = () => {
     ctx.beginPath();
     ctx.arc(canvas.width / 2, canvas.height, canvas.height / 4, degsToRads(225), degsToRads(315));
     ctx.stroke();
+
+    ctx.strokeStyle = "rgb(255, 255, 0, 0.5)";
+    ctx.lineWidth = 40;
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height, canvas.height / 4, degsToRads(goodArc.start), degsToRads(goodArc.end));
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgb(255, 0, 0, 0.5)";
+    ctx.lineWidth = 50;
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height, canvas.height / 4, degsToRads(perfectArc.start), degsToRads(perfectArc.end));
+    ctx.stroke();
+}
+
+const goodDegs = (degs) => {
+    const start = Math.ceil(Math.random() * (315 - degs - 225) + 225);
+    const end = start + degs;
+    goodArc.start = start;
+    goodArc.end = end;
+}
+
+const perfectDegs = (degs) => {
+    const start = (goodArc.start + goodArc.end) / 2 - degs / 2;
+    const end = start + degs;
+    perfectArc.start = start;
+    perfectArc.end = end;
 }
