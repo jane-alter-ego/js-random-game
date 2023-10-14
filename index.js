@@ -47,6 +47,7 @@ const draw = () => {
     drawRadialGradient();
     drawIndicator();
     drawIndicatorHand();
+    drawCookButton();
     
     window.requestAnimationFrame(draw);
 }
@@ -114,3 +115,25 @@ const drawIndicatorHand = () => {
     ctx.resetTransform();
 }
 
+const drawCookButton = () => {
+    const ctx = canvas.getContext("2d");
+    ctx.strokeStyle = "rgb(255, 255, 255)";
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height - 100, 50, 0, 2 * Math.PI);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "black";
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height - 100, 50, 0, 2 * Math.PI);
+    ctx.stroke();
+    
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2 - 20, canvas.height - 100 - 20);
+    ctx.lineTo(canvas.width / 2 - 20, canvas.height - 100 + 20);
+    ctx.lineTo(canvas.width / 2 + 20, canvas.height - 100);
+    ctx.closePath();
+    ctx.fill();
+}
