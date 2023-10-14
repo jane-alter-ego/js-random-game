@@ -74,6 +74,7 @@ const draw = () => {
     drawIndicator();
     drawIndicatorHand();
     drawCookButton();
+    drawWinRecord();
     
     if (isButtonClicked()) {
         switch (state) {
@@ -95,6 +96,11 @@ const draw = () => {
                 break;
             case COOKING_STATE.DONE:
                 state = COOKING_STATE.IDLE;
+
+                if (winRecord.length === 10) {
+                    winRecord = [];
+                }
+                
                 goodDegs(30);
                 perfectDegs(10);
                 break;
@@ -112,6 +118,7 @@ const draw = () => {
                 break;
             case COOKING_STATE.DONE:
                 drawWinStatus();
+                drawFinalResult();
                 break;
     }
 
@@ -237,4 +244,43 @@ const drawWinStatus = () => {
     ctx.fillStyle = "white";
     ctx.font = "60px Arial";
     ctx.fillText(winStatus, canvas.width / 2 - 50, canvas.height / 2 - 80, 100);
+}
+
+const drawWinRecord = () => {
+    const ctx = canvas.getContext("2d");
+    const center = {
+        x: canvas.width / 2,
+        y: canvas.height /2 - 100
+    }
+    const winIndicatorPositions = [];
+
+    for (let i = 0; i < 10; i++) {
+        winIndicatorPositions.push({
+            y: center.y + canvas.height / 5 + 50,
+            x: center.x - 9 * 10 + 5 + i * 20
+        });
+    }
+
+    winIndicatorPositions.forEach((position, i) => {
+        if (winRecord[i] === "PERFECT") {
+            ctx.fillStyle = "red";
+        } else if (winRecord[i] === "GOOD") {
+            ctx.fillStyle = "yellow";
+        } else if (winRecord[i] === "BAD") {
+            ctx.fillStyle = "black";
+        } else {
+            ctx.fillStyle = "white";
+        }
+        ctx.fillRect(position.x, position.y, 10, 10);
+    })
+}
+
+const drawFinalResult = () => {
+    if (winRecord.length === 10) {
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "blue";
+        ctx.font = "200px Arial Bold";
+        const result = winRecord.filter(record => record === 'BAD').length < 5;
+        ctx.fillText(result ? "You Win!" : "You Lose!", canvas.width / 2 - 250, 200, 500);
+    }
 }
