@@ -9,7 +9,7 @@ let perfectArc = {
     end: 0
 }
 let indicatorHandPosition = -45;
-
+let indicatorHandDirection = "up";
 
 document.addEventListener("DOMContentLoaded", () => {
     canvas = document.getElementById("canvas");
@@ -22,6 +22,20 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.width = header.getBoundingClientRect().width;
         canvas.height = window.innerHeight - header.getBoundingClientRect().height - footer.getBoundingClientRect().height;
     })
+
+    setInterval(() => {
+        if (indicatorHandDirection === "up") {
+            indicatorHandPosition += 1;
+        } else {
+            indicatorHandPosition -=1;
+        }
+
+        if (indicatorHandPosition >= 45) {
+            indicatorHandDirection = "down";
+        } else if (indicatorHandPosition <= -45) {
+            indicatorHandDirection = "up";
+        }
+    }, 10);
 
     goodDegs(30);
     perfectDegs(10);
@@ -99,3 +113,4 @@ const drawIndicatorHand = () => {
     ctx.stroke();
     ctx.resetTransform();
 }
+
