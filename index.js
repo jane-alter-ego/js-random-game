@@ -16,6 +16,12 @@ let clickCoords = {
     y: 0
 }
 
+const COOKING_STATE = {
+    IDLE: 0,
+    COOKING: 1,
+    DONE: 2
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     canvas = document.getElementById("canvas");
     const footer = document.getElementById("footer");
@@ -33,18 +39,25 @@ document.addEventListener("DOMContentLoaded", () => {
         clickCoords.y = e.clientY;
     })
 
-    setInterval(() => {
-        if (indicatorHandDirection === "up") {
-            indicatorHandPosition += 1;
-        } else {
-            indicatorHandPosition -=1;
-        }
+    state = COOKING_STATE.IDLE;
 
-        if (indicatorHandPosition >= 45) {
-            indicatorHandDirection = "down";
-        } else if (indicatorHandPosition <= -45) {
-            indicatorHandDirection = "up";
+    setInterval(() => {
+        if (state === COOKING_STATE.IDLE) {
+            indicatorHandPosition = -45;
+        } else if (state === COOKING_STATE.COOKING) {
+            if (indicatorHandDirection === "up") {
+                indicatorHandPosition += 1;
+            } else {
+                indicatorHandPosition -=1;
+            }
+    
+            if (indicatorHandPosition >= 45) {
+                indicatorHandDirection = "down";
+            } else if (indicatorHandPosition <= -45) {
+                indicatorHandDirection = "up";
+            }
         }
+        
     }, 10);
 
     goodDegs(30);
@@ -60,7 +73,19 @@ const draw = () => {
     drawCookButton();
     
     if (isButtonClicked()) {
-        console.log("clicked");
+        switch (state) {
+            case COOKING_STATE.IDLE:
+                state = COOKING_STATE.COOKING;
+                break;
+            case COOKING_STATE.COOKING:
+                state = COOKING_STATE.DONE;
+                break;
+            case COOKING_STATE.DONE:
+                state = COOKING_STATE.IDLE;
+                goodDegs(30);
+                perfectDegs(10);
+                break;
+        }
     }
 
     window.requestAnimationFrame(draw);
@@ -142,14 +167,23 @@ const drawCookButton = () => {
     ctx.beginPath();
     ctx.arc(canvas.width / 2, canvas.height - 100, 50, 0, 2 * Math.PI);
     ctx.stroke();
-    
-    ctx.fillStyle = "black";
-    ctx.beginPath();
-    ctx.moveTo(canvas.width / 2 - 20, canvas.height - 100 - 20);
-    ctx.lineTo(canvas.width / 2 - 20, canvas.height - 100 + 20);
-    ctx.lineTo(canvas.width / 2 + 20, canvas.height - 100);
-    ctx.closePath();
-    ctx.fill();
+
+    if (state === COOKING_STATE.COOKING) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(canvas.width / 2 - 20, canvas.height - 100 - 20, 40, 40);     
+    } else if (state === COOKING_STATE.DONE) {
+        ctx.fillStyle = "black";
+        ctx.font = "40px Arial";
+        ctx.fillText("AGAIN", canvas.width / 2 - 25, canvas.height - 85, 50);
+    } else {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2 - 20, canvas.height - 100 - 20);
+        ctx.lineTo(canvas.width / 2 - 20, canvas.height - 100 + 20);
+        ctx.lineTo(canvas.width / 2 + 20, canvas.height - 100);
+        ctx.closePath();
+        ctx.fill();
+    }
 }
 
 const isButtonClicked = () => {
