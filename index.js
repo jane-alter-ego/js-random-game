@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const recordHistoryString = window.localStorage.getItem('recordHistory');
     if (recordHistoryString) {
         recordHistory = JSON.parse(recordHistoryString);
-    }
+    }    
 
     canvas.addEventListener("click", (e) => {
         clickCoords.x = e.clientX;
@@ -128,7 +128,8 @@ const draw = () => {
                         recordHistory.push({
                             score: result,
                             record: winRecord,
-                            date: Date.now()
+                            date: Date.now(),
+                            result: winRecord.filter(r => r === 'BAD').length < 5 ? 'Win' : 'Lose'
                         })
                      } else {
                         const minScore = Math.min(...recordHistory.map(record => record.score));
@@ -136,7 +137,8 @@ const draw = () => {
                         recordHistory[minScoreIndex] = {
                             score: result,
                             record: winRecord,
-                            date: Date.now()
+                            date: Date.now(),
+                            result: winRecord.filter(r => r === 'BAD').length < 5 ? 'Win' : 'Lose'
                         };         
                     }
 
@@ -328,3 +330,41 @@ const drawFinalResult = () => {
         ctx.fillText(result ? "You Win!" : "You Lose!", canvas.width / 2 - 250, 200, 500);
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("score-list").addEventListener("click", function() {
+        const scoreModalTable = document.getElementById('table');
+
+        for (const record of recordHistory) {
+            const tableRow = document.createElement('tr');
+
+            const tdDate = document.createElement('td')
+            tdDate.innerText = new Date(record.date).toLocaleString('ru-Ru');
+            tableRow.appendChild(tdDate);
+
+            const tdScore = document.createElement('td');
+            tdScore.innerText = record.score;
+            tableRow.appendChild(tdScore);
+
+            const tdResult = document.createElement('td');
+            tdResult.innerText = record.result;
+            tableRow.appendChild(tdResult);
+
+            scoreModalTable.querySelector('tbody').appendChild(tableRow);
+        }
+
+        document.getElementById("overlay").classList.toggle("open");
+        let modal = document.getElementById("modal");
+        modal.style.display = 'flex';
+    })
+});
+
+document.getElementById("score-list").addEventListener('click', event => {
+    event._isClickWithInMenu = true;
+});
+document.body.addEventListener('click', event => {
+    if (event._isClickWithInMenu) return;
+    document.getElementById("overlay").classList.remove("open");
+    let modal = document.getElementById("modal");
+        modal.style.display = 'none'; 
+});
