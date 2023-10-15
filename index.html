@@ -7,10 +7,39 @@
         <link rel="stylesheet" href="style.css">
     </head>
 <body>
-    <main></main>
-    <footer>
+    <div id="wrapper">
+    <header id="header">
+        <p>Test your reaction in 10 attempts. Good luck!</p>
+        <div id="score-list">Results</div>
+        <audio id="audio"></audio>
+    </header>
     
+    <canvas id="canvas"></canvas>
+    
+    <footer id="footer">
+        <ul>
+            <li id="year">2023</li>
+            <li id="github"><a class="link" href="https://github.com/jane-alter-ego">@jane-alter-ego</a></li>        
+        </ul>
+        <div id="rss-logo">
+            <a class="link" href="https://rs.school/js-stage0/" target="_blank"><img src="assets/svg/rss.svg"></a> 
+        </div>
     </footer>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <!--add class open-->
+        
+        <div id="modal" class="modal">
+            <table id="table">
+                <tr>
+                    <th>Datе</th>
+                    <th>Score</th>
+                    <th>Results</th>
+                </tr>      
+            </table>
+        </div>
+
     <script src="index.js"></script>
 </body>
 </html>
