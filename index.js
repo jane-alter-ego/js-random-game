@@ -27,10 +27,13 @@ let winRecord = [];
 
 let recordHistory = [];
 
+let audio;
+
 document.addEventListener("DOMContentLoaded", () => {
     canvas = document.getElementById("canvas");
     const footer = document.getElementById("footer");
     const header = document.getElementById("header");
+    audio = document.getElementById("audio");
     
     canvas.width = header.getBoundingClientRect().width;
     canvas.height = window.innerHeight - header.getBoundingClientRect().height - footer.getBoundingClientRect().height;
@@ -93,10 +96,16 @@ const draw = () => {
                 const calculatedHandPosition = 270 + indicatorHandPosition;
                 if (calculatedHandPosition >= perfectArc.start && calculatedHandPosition <= perfectArc.end) {
                     winStatus = "PERFECT";
+                    audio.src = "assets/sound/tada.mp3";
+                    audio.play();
                 } else if (calculatedHandPosition >= goodArc.start && calculatedHandPosition <= goodArc.end) {
                     winStatus = "GOOD";
+                    audio.src = "assets/sound/tada.mp3";
+                    audio.play();
                 } else {
                     winStatus = "BAD";
+                    audio.src = "assets/sound/clink.mp3";
+                    audio.play();
                 }
                 winRecord.push(winStatus);
 
